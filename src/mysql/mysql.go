@@ -15,6 +15,7 @@ type MyInfo struct {
 }
 
 func InitDB() {
+  //"user:password@(host:port)/database?charset=utf8&parseTime=True&loc=Local"
 	db, err = gorm.Open("mysql", "root:0709@(127.0.0.1:3306)/example?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
   	fmt.Println("failed to connect database")
@@ -33,7 +34,7 @@ func CloseDB() {
 func GetInfo(info *MyInfo) {
 	fmt.Println("GetInfo")
 
-	err = db.Raw("select id, myname from myinfo where id=1").Scan(info).Error
+	err = db.Raw("select id, myname from myinfo limit 1").Scan(info).Error
 	if err != nil {
   	fmt.Println("select error:")
   	return

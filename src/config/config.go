@@ -1,7 +1,9 @@
-package config
+package main
 
 import (
     "fmt"
+    "flag"
+    "os"
     "github.com/jinzhu/configor"
 )
 
@@ -27,9 +29,36 @@ func (c *Config) Println() {
 }
 
 var config Config
+var confFile *string
 
-func test() {
-    //fmt.Printf("config: %+v", config)
-    configor.Load(&config, "/media/sf_share/gobase/conf/config.yml")
+func getOpt() (exit bool) {
+    confFile = flag.String("c", "", "configure file")
+    bUsage := flag.Bool("h", false, "Usage")
+
+    flag.Parse()
+    if flag.NFlag() == 0 {
+        usage()
+        return false
+    }
+    if *bUsage {
+        usage()
+        return false
+    }
+    return true
+}
+
+func usage() {
+    fmt.Printf("Usage :%s  [c:h]\n", os.Args[0])
+    fmt.Println("        -c configure file")
+    fmt.Println("        -h Show help")
+}
+
+func main() {
+    
+    if !getOpt() {
+        return
+    }
+
+    configor.Load(&config, *confFile)
     config.Println()
 }
